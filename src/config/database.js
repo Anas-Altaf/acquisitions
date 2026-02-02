@@ -1,5 +1,8 @@
 import { neon, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Configure Neon for local development with Neon Local
 if (process.env.NODE_ENV === 'development' && process.env.NEON_LOCAL_HOST) {
@@ -12,7 +15,7 @@ if (process.env.NODE_ENV === 'development' && process.env.NEON_LOCAL_HOST) {
   console.log('☁️  Using Neon Cloud');
 }
 
-const sql = neon(process.env.DATABASE_URL);
+const sql = neon(process.env.DATABASE_URL );
 
 const db = drizzle(sql);
 

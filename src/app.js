@@ -41,4 +41,15 @@ app.get('/api', (req, res) => {
 
 // Auth Routes
 app.use('/api/auth', authRoutes);
+
+// 404 Handler
+app.use((req, res, next) => {
+  res.status(404).json({ error: 'Route Not Found' });
+});
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+  logger.error(err.stack);
+  res.status(500).json({ error: 'Internal Server Error' });
+});
 export default app;
