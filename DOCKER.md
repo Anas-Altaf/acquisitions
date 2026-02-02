@@ -21,6 +21,7 @@ The application supports two distinct environments:
 ### Architecture
 
 **Development:**
+
 ```
 ┌─────────────┐       ┌──────────────┐       ┌─────────────┐
 │   App       │ ───▶  │ Neon Local   │ ───▶  │ Neon Cloud  │
@@ -29,6 +30,7 @@ The application supports two distinct environments:
 ```
 
 **Production:**
+
 ```
 ┌─────────────┐                              ┌─────────────┐
 │   App       │ ──────────────────────────▶  │ Neon Cloud  │
@@ -203,35 +205,37 @@ docker-compose -f docker-compose.prod.yml down
 
 ### Development Environment (.env.development)
 
-| Variable | Description | Required | Example |
-|----------|-------------|----------|---------|
-| `NEON_API_KEY` | Your Neon API key | ✅ | `neon_api_xxx` |
-| `NEON_PROJECT_ID` | Your Neon project ID | ✅ | `purple-flower-12345678` |
-| `PARENT_BRANCH_ID` | Parent branch for ephemeral branches | ✅ | `br-proud-sun-87654321` |
-| `DB_NAME` | Database name | ❌ | `neondb` (default) |
-| `NODE_ENV` | Environment mode | ✅ | `development` |
-| `LOG_LEVEL` | Logging level | ❌ | `debug` |
+| Variable           | Description                          | Required | Example                  |
+| ------------------ | ------------------------------------ | -------- | ------------------------ |
+| `NEON_API_KEY`     | Your Neon API key                    | ✅       | `neon_api_xxx`           |
+| `NEON_PROJECT_ID`  | Your Neon project ID                 | ✅       | `purple-flower-12345678` |
+| `PARENT_BRANCH_ID` | Parent branch for ephemeral branches | ✅       | `br-proud-sun-87654321`  |
+| `DB_NAME`          | Database name                        | ❌       | `neondb` (default)       |
+| `NODE_ENV`         | Environment mode                     | ✅       | `development`            |
+| `LOG_LEVEL`        | Logging level                        | ❌       | `debug`                  |
 
 ### Production Environment (.env.production)
 
-| Variable | Description | Required | Example |
-|----------|-------------|----------|---------|
-| `DATABASE_URL` | Neon Cloud connection string | ✅ | `postgres://...neon.tech/...` |
-| `NODE_ENV` | Environment mode | ✅ | `production` |
-| `LOG_LEVEL` | Logging level | ❌ | `info` |
-| `PORT` | Application port | ❌ | `3000` (default) |
+| Variable       | Description                  | Required | Example                       |
+| -------------- | ---------------------------- | -------- | ----------------------------- |
+| `DATABASE_URL` | Neon Cloud connection string | ✅       | `postgres://...neon.tech/...` |
+| `NODE_ENV`     | Environment mode             | ✅       | `production`                  |
+| `LOG_LEVEL`    | Logging level                | ❌       | `info`                        |
+| `PORT`         | Application port             | ❌       | `3000` (default)              |
 
 ## Database Connection Behavior
 
 The application automatically detects the environment and configures the database connection:
 
 ### Development Mode
+
 - Detects `NODE_ENV=development` and `NEON_LOCAL_HOST`
 - Configures Neon serverless driver for HTTP-only communication
 - Points to `http://neon-local:5432/sql` endpoint
 - Console output: `🔧 Using Neon Local at: http://neon-local:5432/sql`
 
 ### Production Mode
+
 - Uses standard Neon Cloud connection
 - WebSocket and SSL enabled by default
 - Console output: `☁️  Using Neon Cloud`
@@ -241,12 +245,14 @@ The application automatically detects the environment and configures the databas
 ### View Logs
 
 Development:
+
 ```powershell
 docker-compose -f docker-compose.dev.yml logs -f app
 docker-compose -f docker-compose.dev.yml logs -f neon-local
 ```
 
 Production:
+
 ```powershell
 docker-compose -f docker-compose.prod.yml logs -f app
 ```
@@ -264,6 +270,7 @@ docker-compose -f docker-compose.prod.yml exec app sh
 ### Run Drizzle Studio (Database GUI)
 
 Development:
+
 ```powershell
 docker exec -it acquisitions-app npm run db:studio
 ```
@@ -287,6 +294,7 @@ docker-compose -f docker-compose.prod.yml build --no-cache
 **Symptoms**: App can't connect to database in development
 
 **Solution**:
+
 1. Verify Neon credentials in `.env.development`
 2. Check Neon Local logs:
    ```powershell
@@ -300,6 +308,7 @@ docker-compose -f docker-compose.prod.yml build --no-cache
 **Symptoms**: App can't connect to Neon Cloud
 
 **Solution**:
+
 1. Verify `DATABASE_URL` is correct in `.env.production`
 2. Check if your Neon project is active (not suspended)
 3. Ensure SSL is enabled in the connection string: `?sslmode=require`
@@ -310,6 +319,7 @@ docker-compose -f docker-compose.prod.yml build --no-cache
 **Symptoms**: `Error: bind: address already in use`
 
 **Solution**:
+
 ```powershell
 # Find process using port 3000
 netstat -ano | findstr :3000
@@ -324,6 +334,7 @@ docker-compose -f docker-compose.prod.yml down
 **Symptoms**: Migration errors or schema not found
 
 **Solution**:
+
 1. Ensure database is accessible
 2. Check migration files in `./drizzle` directory
 3. Run migrations manually:
@@ -341,12 +352,14 @@ docker-compose -f docker-compose.prod.yml down
 ## Best Practices
 
 ### Development
+
 - ✅ Use ephemeral branches for isolated testing
 - ✅ Let Docker manage branch lifecycle
 - ✅ Keep Neon credentials in `.env.development` (not committed)
 - ✅ Use `docker-compose down` to clean up resources
 
 ### Production
+
 - ✅ Use production-grade Neon branch (not `main`)
 - ✅ Inject secrets via environment variables or secret management
 - ✅ Never hardcode credentials in code
@@ -360,6 +373,7 @@ docker-compose -f docker-compose.prod.yml down
 ### Docker Hub / Container Registry
 
 Build and push:
+
 ```powershell
 docker build -t your-registry/acquisitions:latest .
 docker push your-registry/acquisitions:latest
@@ -368,6 +382,7 @@ docker push your-registry/acquisitions:latest
 ### Environment Variables for Cloud Deployment
 
 Ensure these are set in your cloud platform:
+
 - `DATABASE_URL`: Your Neon connection string
 - `NODE_ENV`: `production`
 - `PORT`: Application port (often provided by platform)
@@ -382,5 +397,6 @@ Ensure these are set in your cloud platform:
 ## Support
 
 For issues specific to:
+
 - **Neon Database**: [Neon Support](https://neon.tech/docs/introduction)
 - **Application**: Open an issue in the GitHub repository

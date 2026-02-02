@@ -1,4 +1,3 @@
-
 services:
   # Application Service for Production
   app:

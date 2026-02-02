@@ -43,13 +43,13 @@ jobs:
         run: |
           echo "::error::ESLint found issues. Run 'npm run lint:fix' to automatically fix some problems."
           exit 1
-      
+
       - name: Annotate Prettier failures
         if: steps.prettier.outcome == 'failure'
         run: |
           echo "::error::Prettier found formatting issues. Run 'npm run format' to fix formatting."
           exit 1
-      
+
       - name: Check overall status
         if: steps.eslint.outcome == 'failure' || steps.prettier.outcome == 'failure'
         run: |
@@ -69,7 +69,7 @@ jobs:
             echo "- **Prettier**: Passed ✅" >> $GITHUB_STEP_SUMMARY
           fi
           exit 1
-      
+
       - name: Success summary
         if: steps.eslint.outcome == 'success' && steps.prettier.outcome == 'success'
         run: |

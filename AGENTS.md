@@ -30,6 +30,7 @@ routes → controllers → services → models (Drizzle)
 ```
 
 **Path Aliases**: The project uses subpath imports defined in package.json:
+
 - `#config/*`, `#controllers/*`, `#middleware/*`, `#models/*`, `#routes/*`, `#services/*`, `#utils/*`, `#validations/*`
 
 **Entry Point Flow**: `index.js` → loads dotenv → `server.js` → starts Express app from `app.js`
@@ -45,6 +46,7 @@ routes → controllers → services → models (Drizzle)
 ## Environment Variables
 
 Required in `.env` (see `.env.example`):
+
 - `DATABASE_URL` - Neon PostgreSQL connection string
 - `PORT` - Server port (default: 3000)
 - `NODE_ENV` - Environment (development/production)

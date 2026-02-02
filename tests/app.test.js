@@ -19,7 +19,10 @@ describe('API Endpoints', () => {
     it('Should Return API Running Message', async () => {
       const response = await request(app).get('/api');
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('message', 'Acquisitions API is running!');
+      expect(response.body).toHaveProperty(
+        'message',
+        'Acquisitions API is running!'
+      );
     });
   });
 

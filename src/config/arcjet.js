@@ -1,7 +1,5 @@
 import arcjet, { shield, detectBot, slidingWindow } from '@arcjet/node';
 
-
-
 const aj = arcjet({
   // Get your site key from https://app.arcjet.com and set it as an environment
   // variable rather than hard coding.
@@ -24,7 +22,6 @@ const aj = arcjet({
     // Create a token bucket rate limit. Other algorithms are supported.
     slidingWindow({
       mode: 'LIVE',
-    
 
       interval: '2s', // Refill every 10 seconds
       max: 5, // Bucket capacity of 10 tokens
