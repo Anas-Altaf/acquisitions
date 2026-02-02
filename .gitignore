@@ -2,3 +2,8 @@ node_modules/
 
 
 .env.*.neon_local/
+
+coverage/
+.vscode/
+.DS_Store
+  neon_local/
