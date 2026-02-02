@@ -38,18 +38,42 @@ jobs:
         run: npm run format:check
         continue-on-error: true
 
-      - name: Annotate results
+      - name: Annotate ESLint failures
+        if: steps.eslint.outcome == 'failure'
+        run: |
+          echo "::error::ESLint found issues. Run 'npm run lint:fix' to automatically fix some problems."
+          exit 1
+      
+      - name: Annotate Prettier failures
+        if: steps.prettier.outcome == 'failure'
+        run: |
+          echo "::error::Prettier found formatting issues. Run 'npm run format' to fix formatting."
+          exit 1
+      
+      - name: Check overall status
         if: steps.eslint.outcome == 'failure' || steps.prettier.outcome == 'failure'
         run: |
-          echo "::error::Linting or formatting issues detected!"
+          echo "::error::Linting or formatting checks failed. Please fix the issues and commit the changes."
+          echo "### ❌ Lint and Format Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
           if [ "${{ steps.eslint.outcome }}" == "failure" ]; then
-            echo "::notice::Run 'npm run lint:fix' to automatically fix ESLint issues"
+            echo "- **ESLint**: Failed ❌" >> $GITHUB_STEP_SUMMARY
+            echo "  - Fix: \`npm run lint:fix\`" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- **ESLint**: Passed ✅" >> $GITHUB_STEP_SUMMARY
           fi
           if [ "${{ steps.prettier.outcome }}" == "failure" ]; then
-            echo "::notice::Run 'npm run format' to automatically fix formatting issues"
+            echo "- **Prettier**: Failed ❌" >> $GITHUB_STEP_SUMMARY
+            echo "  - Fix: \`npm run format\`" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- **Prettier**: Passed ✅" >> $GITHUB_STEP_SUMMARY
           fi
           exit 1
-
+      
       - name: Success summary
         if: steps.eslint.outcome == 'success' && steps.prettier.outcome == 'success'
-        run: echo "✅ All linting and formatting checks passed!"
+        run: |
+          echo "### ✅ Lint and Format Passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **ESLint**: Passed ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- **Prettier**: Passed ✅" >> $GITHUB_STEP_SUMMARY
